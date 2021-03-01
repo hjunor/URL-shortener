@@ -17,17 +17,14 @@ class LinksControllers {
     if(linkExists){
       response.status(400).json({error: 'url is exists'});
     }
-    
-
     const newLink = linkRepository.create({
        url,
        code:gereneteCode(),
        hit: 0
     })
-
     const { code } = await linkRepository.save(newLink);
 
-    return response.status(201).json(code)
+    return response.status(201).json({newUrl: `http://localhost:3002/${code}`})
 
   }
    async index(request: Request, response: Response){
@@ -41,10 +38,7 @@ class LinksControllers {
       response.status(400).json({error: 'url not is exists'});
     }
     
-
-    return response.status(201).json( linkExists );
-
-
+    return response.status(200).json(linkExists );
   }
    async hit(request: Request, response: Response){
     const { code } = request.params;
@@ -56,10 +50,8 @@ class LinksControllers {
     if(!linkExists){
       response.status(400).json({error: 'url not is exists'});
     }
-
-     console.log(dateValidator(linkExists.created_at))
-
-     const days = dateValidator(linkExists.created_at);
+     
+     const days = dateValidator(linkExists!.created_at);
 
      if(days > 30){
       response.status(404).json({error: 'url not valid'});
@@ -67,8 +59,11 @@ class LinksControllers {
 
      const id : any = linkExists?.id;
 
-     linkExists!.hit =  parseInt(linkExists!.hit) + 1;
+     const increment : number = linkExists!.hit;
+     linkExists!.hit =  increment + 1;
     
+     
+
      await linkRepository.update( id, linkExists );
 
      return response.redirect(linkExists.url)

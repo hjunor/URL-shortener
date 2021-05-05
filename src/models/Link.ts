@@ -1,4 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity('link')
 class Link {
@@ -16,7 +21,6 @@ class Link {
 
   @CreateDateColumn()
   created_at: Date;
-
 }
 
 export default Link;
